@@ -1,0 +1,171 @@
+# =============================================================================
+# Docker Compose — High-Fashion Disparity Tracker
+# =============================================================================
+# Two profiles are provided:
+#
+#   1. `postgres` (default, recommended — mirrors the Vercel + Supabase prod setup)
+#      Starts a local Postgres 16 container, runs prisma db push + seed, then
+#      launches Next.js wired to that Postgres instance.
+#
+#        docker compose --profile postgres up --build
+#
+#   2. `sqlite` (legacy / offline dev)
+#      Runs the standalone Bun analytics engine + Next.js with a shared SQLite
+#      volume. NOT recommended for portfolio deployment.
+#
+#        docker compose --profile sqlite up --build
+#
+# NOTE: Vercel deployment does NOT use docker-compose. See README.md → Deploy.
+# =============================================================================
+
+services:
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # Profile: postgres  (default)
+  # ───────────────────────────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: luxe-tracker-db
+    profiles: ["postgres"]
+    environment:
+      POSTGRES_USER: luxe
+      POSTGRES_PASSWORD: luxe_password
+      POSTGRES_DB: luxe_tracker
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U luxe -d luxe_tracker"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - luxe-network
+
+  db-migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.seed
+    container_name: luxe-tracker-migrate
+    profiles: ["postgres"]
+    environment:
+      - DATABASE_URL=postgresql://luxe:luxe_password@db:5432/luxe_tracker?schema=public
+      - DIRECT_DATABASE_URL=postgresql://luxe:luxe_password@db:5432/luxe_tracker?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["sh", "-c", "npx prisma db push --skip-generate && bun prisma/seed.ts"]
+    restart: "no"
+    networks:
+      - luxe-network
+
+  frontend-postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: luxe-tracker-frontend
+    profiles: ["postgres"]
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://luxe:luxe_password@db:5432/luxe_tracker?schema=public
+      - DIRECT_DATABASE_URL=postgresql://luxe:luxe_password@db:5432/luxe_tracker?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+      db-migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    networks:
+      - luxe-network
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # Profile: sqlite  (legacy / offline)
+  # ───────────────────────────────────────────────────────────────────────────
+  analytics-engine:
+    build:
+      context: ./mini-services/analytics-engine
+      dockerfile: Dockerfile
+    container_name: luxe-tracker-engine
+    profiles: ["sqlite"]
+    ports:
+      - "3030:3030"
+    environment:
+      - DATABASE_URL=file:/data/custom.db
+      - PORT=3030
+    volumes:
+      - db-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3030/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    networks:
+      - luxe-network
+
+  frontend-sqlite:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: luxe-tracker-frontend-sqlite
+    profiles: ["sqlite"]
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/data/custom.db
+      - DIRECT_DATABASE_URL=file:/data/custom.db
+    volumes:
+      - db-data:/data
+    depends_on:
+      analytics-engine:
+        condition: service_healthy
+      db-seed:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    networks:
+      - luxe-network
+
+  db-seed:
+    build:
+      context: .
+      dockerfile: Dockerfile.seed
+    container_name: luxe-tracker-seed
+    profiles: ["sqlite"]
+    volumes:
+      - db-data:/data
+    environment:
+      - DATABASE_URL=file:/data/custom.db
+      - DIRECT_DATABASE_URL=file:/data/custom.db
+    depends_on:
+      analytics-engine:
+        condition: service_healthy
+    restart: "no"
+    networks:
+      - luxe-network
+
+volumes:
+  pg-data:
+    driver: local
+  db-data:
+    driver: local
+
+networks:
+  luxe-network:
+    driver: bridge

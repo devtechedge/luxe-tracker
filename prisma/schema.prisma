@@ -1,0 +1,349 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// High-Fashion Global Launch & Price Disparity Tracker — Prisma schema
+// ─────────────────────────────────────────────────────────────────────────────
+// Database provider: PostgreSQL (Supabase in production, local Postgres or
+// Supabase CLI for dev). SQLite is no longer supported.
+//
+// Supabase connection strings:
+//   - DATABASE_URL        → Transaction pooler (port 6543, ?pgbouncer=true)
+//   - DIRECT_DATABASE_URL → Session pooler  (port 5432) — used for migrations
+// ─────────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Core entities
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Brand {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  logo         String?
+  country      String
+  currency     String
+  tierScore    Float    @default(75) // 0-100 brand prestige tier
+  products     Product[]
+  launches     Launch[]
+  priceHistory PriceHistory[]
+  lookbooks    LookbookEntry[]
+  hypeFactors  HypeFactor[]
+  watchlist        WatchlistItem[]
+  alerts           Alert[]
+  runwayShows      RunwayShow[]
+  vipTiers         VIPTier[]
+  sustainability   SustainabilityMetric[]
+  dropQueues       DropQueue[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([country])
+  @@index([tierScore])
+}
+
+model Product {
+  id              String          @id @default(cuid())
+  name            String
+  sku             String          @unique
+  category        String
+  subCategory     String?
+  season          String
+  year            Int
+  imageUrl        String?
+  editionType     String          @default("standard") // standard | limited | exclusive
+  resaleValueIdx  Float           @default(1.0) // multiplier vs retail
+  brandId         String
+  brand           Brand           @relation(fields: [brandId], references: [id])
+  regionalPrices  RegionalPrice[]
+  launches        Launch[]
+  priceHistory    PriceHistory[]
+  hypeFactors     HypeFactor[]
+  watchlist       WatchlistItem[]
+  alerts          Alert[]
+  dropQueues      DropQueue[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([brandId])
+  @@index([category])
+  @@index([season, year])
+}
+
+model RegionalPrice {
+  id           String   @id @default(cuid())
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  region       String
+  currency     String
+  price        Float
+  importDuty   Float    @default(0)
+  taxRate      Float    @default(0)
+  shippingCost Float    @default(0) // estimated shipping from EU
+  stockStatus  String   @default("available")
+  stockLevel   Int      @default(50) // 0-100, inventory fill rate
+  lastUpdated  DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([productId])
+  @@index([region])
+  @@index([currency])
+}
+
+model Launch {
+  id            String   @id @default(cuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  brandId       String
+  brand         Brand    @relation(fields: [brandId], references: [id])
+  region        String
+  launchDate    DateTime
+  launchType    String
+  status        String   @default("upcoming")
+  expectedUnits Int      @default(500) // expected production run
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([productId])
+  @@index([brandId])
+  @@index([launchDate])
+  @@index([status])
+}
+
+model CurrencyRate {
+  id              String   @id @default(cuid())
+  baseCurrency    String   @default("EUR")
+  targetCurrency  String
+  rate            Float
+  lastUpdated     DateTime @default(now())
+  history         CurrencyHistory[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([baseCurrency, targetCurrency])
+}
+
+model CurrencyHistory {
+  id             String   @id @default(cuid())
+  currencyRateId String
+  currencyRate   CurrencyRate @relation(fields: [currencyRateId], references: [id], onDelete: Cascade)
+  date           DateTime
+  rate           Float
+  createdAt      DateTime @default(now())
+
+  @@index([currencyRateId, date])
+}
+
+model LookbookEntry {
+  id          String   @id @default(cuid())
+  brandId     String
+  brand       Brand    @relation(fields: [brandId], references: [id])
+  season      String
+  year        Int
+  title       String
+  description String?
+  imageUrl    String?
+  theme       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([brandId, season, year])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Advanced feature models (v2.0)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model PriceHistory {
+  id           String   @id @default(cuid())
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  brandId      String
+  brand        Brand    @relation(fields: [brandId], references: [id])
+  region       String
+  currency     String
+  price        Float
+  date         DateTime
+  changePct    Float    @default(0) // % change from previous day
+  anomalyFlag  Boolean  @default(false) // marks unusual price movements
+  createdAt    DateTime @default(now())
+
+  @@index([productId, region, date])
+  @@index([brandId, date])
+  @@index([anomalyFlag, date])
+}
+
+model HypeFactor {
+  id              String   @id @default(cuid())
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  brandId         String
+  brand           Brand    @relation(fields: [brandId], references: [id])
+  hypeScore       Float    // 0-100 predicted demand
+  brandTierWeight Float    // contribution from brand prestige
+  categoryWeight  Float    // contribution from category demand
+  seasonWeight    Float    // contribution from season timing
+  exclusivityWeight Float  // contribution from edition type
+  decayWeight     Float    // time-to-launch decay
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([brandId])
+  @@index([hypeScore])
+}
+
+model WatchlistItem {
+  id           String   @id @default(cuid())
+  userId       String   @default("default") // single-user for portfolio demo
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  brandId      String?
+  brand        Brand?   @relation(fields: [brandId], references: [id])
+  watchType    String   @default("product") // product | brand | region
+  region       String?
+  targetPrice  Float?   // alert threshold
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+  @@index([productId])
+}
+
+model Alert {
+  id           String   @id @default(cuid())
+  userId       String   @default("default")
+  watchlistId  String?
+  alertType    String   // price_drop | launch_reminder | stock_change | arbitrage
+  productId    String?
+  product      Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  brandId      String?
+  brand        Brand?   @relation(fields: [brandId], references: [id])
+  region       String?
+  message      String
+  severity     String   @default("info") // info | warning | critical
+  read         Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  @@index([userId, read])
+  @@index([alertType, createdAt])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// v3.0 New feature models
+// ─────────────────────────────────────────────────────────────────────────────
+
+// FEATURE 11: Runway Collection Tracker
+model RunwayShow {
+  id            String   @id @default(cuid())
+  brandId       String
+  brand         Brand    @relation(fields: [brandId], references: [id])
+  showName      String
+  season        String
+  year          Int
+  city          String
+  venue         String?
+  showDate      DateTime
+  mood          String?  // e.g. "Dark Romance", "Coastal Riviera"
+  theme         String?
+  lookCount     Int      @default(40)
+  standouts     Int      @default(5)  // standout looks count
+  collectionId  String?  // external collection reference
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([brandId, season, year])
+  @@index([showDate])
+  @@index([city])
+}
+
+// FEATURE 12: VIP Client Tier Simulator
+model VIPTier {
+  id                  String   @id @default(cuid())
+  brandId             String
+  brand               Brand    @relation(fields: [brandId], references: [id])
+  tierName            String   // Silver | Gold | Platinum | Diamond
+  minAnnualSpendEUR   Float
+  discountPct         Float    @default(0)
+  earlyAccessDays     Int      @default(0)
+  allocationPriority  Int      @default(1) // 1-5, higher = better
+  privateViewing      Boolean  @default(false)
+  personalShopper     Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@unique([brandId, tierName])
+  @@index([brandId])
+}
+
+// FEATURE 13: Sustainability Score
+model SustainabilityMetric {
+  id                      String   @id @default(cuid())
+  brandId                 String
+  brand                   Brand    @relation(fields: [brandId], references: [id])
+  carbonScore             Float    @default(50)   // 0-100 (higher = better)
+  materialSourcing        Float    @default(50)
+  supplyChainTransparency Float    @default(50)
+  circularityIndex        Float    @default(50)
+  laborPracticeScore      Float    @default(50)
+  overallScore            Float    @default(50)
+  reportYear              Int      @default(2025)
+  reportUrl               String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@unique([brandId, reportYear])
+  @@index([overallScore])
+}
+
+// FEATURE 14: Seasonal Trend Forecast
+model TrendForecast {
+  id              String   @id @default(cuid())
+  season          String
+  year            Int
+  category        String
+  trendName       String   // e.g. "Oversized Silhouettes"
+  trendType       String   // color | material | silhouette | accessory | vibe
+  intensity       Float    @default(50) // 0-100 trend strength
+  colorPalette    String?  // JSON array of hex codes
+  description     String?
+  keyBrands       String?  // JSON array of brand names driving this trend
+  confidence      Float    @default(70) // 0-100 prediction confidence
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([season, year, category])
+  @@index([trendType])
+  @@index([intensity])
+}
+
+// FEATURE 15: Exclusive Drop Queue
+model DropQueue {
+  id              String   @id @default(cuid())
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  brandId         String
+  brand           Brand    @relation(fields: [brandId], references: [id])
+  region          String
+  queueType       String   @default("waitlist") // waitlist | raffle | invite
+  totalSlots      Int      @default(100)
+  filledSlots     Int      @default(0)
+  userPosition    Int?     // simulated position for the demo user
+  oddsOfSuccess   Float    @default(0.5) // 0-1 probability
+  opensAt         DateTime
+  closesAt        DateTime?
+  status          String   @default("upcoming") // upcoming | open | closed | fulfilled
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([productId, region])
+  @@index([status])
+  @@index([opensAt])
+}

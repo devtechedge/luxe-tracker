@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Brand {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  logo      String?
+  country   String
+  currency  String
+  products  Product[]
+  launches  Launch[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id           String          @id @default(cuid())
+  name         String
+  sku          String          @unique
+  category     String
+  subCategory  String?
+  season       String
+  year         Int
+  imageUrl     String?
+  brandId      String
+  brand        Brand           @relation(fields: [brandId], references: [id])
+  regionalPrices RegionalPrice[]
+  launches     Launch[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+}
+
+model RegionalPrice {
+  id           String   @id @default(cuid())
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id])
+  region       String
+  currency     String
+  price        Float
+  importDuty   Float    @default(0)
+  taxRate      Float    @default(0)
+  stockStatus  String   @default("available")
+  lastUpdated  DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Launch {
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+  brandId     String
+  brand       Brand    @relation(fields: [brandId], references: [id])
+  region      String
+  launchDate  DateTime
+  launchType  String
+  status      String   @default("upcoming")
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CurrencyRate {
+  id           String   @id @default(cuid())
+  baseCurrency String   @default("EUR")
+  targetCurrency String
+  rate         Float
+  lastUpdated  DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model LookbookEntry {
+  id          String   @id @default(cuid())
+  brandId     String
+  season      String
+  year        Int
+  title       String
+  description String?
+  imageUrl    String?
+  theme       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

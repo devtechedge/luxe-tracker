@@ -1,0 +1,21 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# One-time DB Migrator + Seeder
+# Used by docker-compose to push schema and seed sample data on first boot.
+# Works with both Postgres (default profile) and SQLite (legacy profile) —
+# the DATABASE_URL is supplied at runtime via environment.
+# ─────────────────────────────────────────────────────────────────────────────
+FROM oven/bun:1
+WORKDIR /app
+
+COPY package.json bun.lock* ./
+RUN bun install
+
+COPY prisma/ ./prisma/
+RUN bunx prisma generate
+
+COPY prisma/seed.ts ./seed.ts
+
+# Expected env vars (supplied by docker-compose):
+#   DATABASE_URL        — pooler URL for runtime
+#   DIRECT_DATABASE_URL — direct URL for prisma db push
+CMD ["sh", "-c", "bunx prisma db push --skip-generate && bun seed.ts"]
