@@ -400,18 +400,25 @@ console.log('✅ Products & regional prices seeded')
     // LV and Prada have higher thresholds
     const multiplier = brand.name === 'Louis Vuitton' ? 1.3 : brand.name === 'Prada' ? 1.15 : 1.0
     for (const tier of VIP_TIER_TEMPLATES) {
-      await prisma.vIPTier.create({
-        data: {
-          brandId: brand.id,
-          tierName: tier.tierName,
-          minAnnualSpendEUR: round2(tier.minAnnualSpendEUR * multiplier),
-          discountPct: round2(tier.discountPct * (2 - multiplier * 0.3)),
-          earlyAccessDays: tier.earlyAccessDays,
-          allocationPriority: tier.allocationPriority,
-          privateViewing: tier.privateViewing,
-          personalShopper: tier.personalShopper,
-        },
-      })
+      await prisma.vIPTier.upsert({
+  where: {
+    brandId_tierName: {
+      brandId: brand.id,
+      tierName: tier.tierName,
+    },
+  },
+  update: {},
+  create: {
+    brandId: brand.id,
+    tierName: tier.tierName,
+    minAnnualSpendEUR: round2(tier.minAnnualSpendEUR * multiplier),
+    discountPct: round2(tier.discountPct * (2 - multiplier * 0.3)),
+    earlyAccessDays: tier.earlyAccessDays,
+    allocationPriority: tier.allocationPriority,
+    privateViewing: tier.privateViewing,
+    personalShopper: tier.personalShopper,
+  },
+})
     }
   }
   console.log(`✅ ${brandRecords.length * 4} VIP tiers seeded`)
@@ -425,18 +432,29 @@ console.log('✅ Products & regional prices seeded')
     'Versace':       { carbonScore: 45, materialSourcing: 52, supplyChainTransparency: 38, circularityIndex: 30, laborPracticeScore: 58 },
   }
   for (const brand of brandRecords) {
-    const sd = SUSTAINABILITY_DATA[brand.name] || { carbonScore: 50, materialSourcing: 50, supplyChainTransparency: 50, circularityIndex: 50, laborPracticeScore: 50 }
-    const overallScore = round2((sd.carbonScore + sd.materialSourcing + sd.supplyChainTransparency + sd.circularityIndex + sd.laborPracticeScore) / 5)
-    await prisma.sustainabilityMetric.create({
-      data: {
+  const sd = SUSTAINABILITY_DATA[brand.name] || { carbonScore: 50, materialSourcing: 50, supplyChainTransparency: 50, circularityIndex: 50, laborPracticeScore: 50 }
+  const overallScore = round2((sd.carbonScore + sd.materialSourcing + sd.supplyChainTransparency + sd.circularityIndex + sd.laborPracticeScore) / 5)
+  await prisma.sustainabilityMetric.upsert({
+    where: {
+      brandId_reportYear: {
         brandId: brand.id,
-        carbonScore: sd.carbonScore, materialSourcing: sd.materialSourcing,
-        supplyChainTransparency: sd.supplyChainTransparency, circularityIndex: sd.circularityIndex,
-        laborPracticeScore: sd.laborPracticeScore, overallScore, reportYear: 2025,
+        reportYear: 2025,
       },
-    })
-  }
-  console.log('✅ Sustainability metrics seeded')
+    },
+    update: {},
+    create: {
+      brandId: brand.id,
+      carbonScore: sd.carbonScore,
+      materialSourcing: sd.materialSourcing,
+      supplyChainTransparency: sd.supplyChainTransparency,
+      circularityIndex: sd.circularityIndex,
+      laborPracticeScore: sd.laborPracticeScore,
+      overallScore,
+      reportYear: 2025,
+    },
+  })
+}
+console.log('✅ Sustainability metrics seeded')
 
   // ────── FEATURE 14: Trend Forecasts ──────
   const TREND_DATA = [
