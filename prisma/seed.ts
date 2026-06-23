@@ -104,11 +104,18 @@ async function main() {
 
   // ────── Currency Rates ──────
   const rateRecords = []
-  for (const rate of CURRENCY_RATES) {
-    const r = await prisma.currencyRate.create({
-      data: { baseCurrency: rate.baseCurrency, targetCurrency: rate.targetCurrency, rate: rate.rate }
-    })
-    rateRecords.push({ ...r, baseRate: rate.rate })
+for (const rate of CURRENCY_RATES) {
+    let r = await prisma.currencyRate.findFirst({
+      where: { baseCurrency: rate.baseCurrency, targetCurrency: rate.targetCurrency }
+    });
+
+    if (!r) {
+      r = await prisma.currencyRate.create({
+        data: { baseCurrency: rate.baseCurrency, targetCurrency: rate.targetCurrency, rate: rate.rate }
+      });
+    }
+
+    rateRecords.push({ ...r, baseRate: rate.rate });
   }
   console.log('✅ Currency rates seeded')
 
@@ -135,84 +142,100 @@ async function main() {
   console.log(`✅ ${fxCount} currency history points seeded (90 days × 4 pairs)`)
 
   // ────── Brands ──────
-  const brandRecords = []
-  for (const brand of BRANDS) {
-    const record = await prisma.brand.create({ data: brand })
-    brandRecords.push(record)
+const brandRecords = []
+for (const brand of BRANDS) {
+  let record = await prisma.brand.findFirst({
+    where: { name: brand.name }
+  })
+
+  if (!record) {
+    record = await prisma.brand.create({ data: brand })
   }
+  brandRecords.push(record)
+}
   console.log('✅ Brands seeded')
 
   // ────── Products + Regional Prices ──────
-  const productRecords = []
-  for (const prod of PRODUCTS) {
-    const brand = brandRecords[prod.brandIdx]
-    const basePriceEUR = BASE_PRICES_EUR[prod.sku]
-    const brandMarkups = BRAND_MARKUPS[brand.name]
+const productRecords = []
+for (const prod of PRODUCTS) {
+  const brand = brandRecords[prod.brandIdx]
+  const basePriceEUR = BASE_PRICES_EUR[prod.sku]
+  const brandMarkups = BRAND_MARKUPS[brand.name]
 
-    const product = await prisma.product.create({
+  let product = await prisma.product.findFirst({
+    where: { sku: prod.sku }
+  })
+
+  if (!product) {
+    product = await prisma.product.create({
       data: {
         name: prod.name, sku: prod.sku, category: prod.category, subCategory: prod.subCategory || null,
-        season: prod.season, year: prod.year, brandId: brand.id,
+        season: prod.season, year: prod.year, brandID: brand.id,
         editionType: prod.editionType, resaleValueIdx: prod.resaleValueIdx,
       },
     })
-    productRecords.push({ ...product, basePriceEUR, brandName: brand.name })
+  }
+  productRecords.push({ ...product, basePriceEUR, brandName: brand.name })
 
-    for (const reg of REGIONS) {
-      const markup = brandMarkups[reg.region] || 1.0
-      const currencyRate = CURRENCY_RATES.find(r => r.targetCurrency === reg.currency)
-      const convertedPrice = basePriceEUR * markup * (currencyRate?.rate || 1)
-      const finalPrice = Math.round(convertedPrice * 100) / 100
+  for (const reg of REGIONS) {
+    const markup = brandMarkups[reg.region] || 1.0
+    const currencyRate = CURRENCY_RATES.find(r => r.targetCurrency === reg.currency)
+    const convertedPrice = basePriceEUR * markup * (currencyRate?.rate || 1)
+    const finalPrice = Math.round(convertedPrice * 100) / 100
 
-      // Vary stock level slightly per product
-      const stockLevel = Math.max(0, Math.min(100, reg.stockLevel + randInt(-15, 15)))
+    const stockLevel = Math.max(0, Math.min(100, reg.stockLevel + randInt(-15, 15)))
 
+    const existingPrice = await prisma.regionalPrice.findFirst({
+      where: { productId: product.id, region: reg.region }
+    })
+
+    if (!existingPrice) {
       await prisma.regionalPrice.create({
         data: {
           productId: product.id, region: reg.region, currency: reg.currency,
           price: finalPrice, importDuty: reg.importDuty, taxRate: reg.taxRate,
-          shippingCost: reg.shippingCost, stockStatus: stockLevel < 25 ? 'pre-order' : stockLevel < 50 ? 'limited' : reg.stockStatus,
-          stockLevel,
-        },
+          shippingCost: reg.shippingCost, 
+          stockLevel: stockLevel, 
+          stockStatus: stockLevel < 25 ? 'pre-order' : 'in-stock'
+        }
       })
     }
   }
-  console.log('✅ Products & regional prices seeded')
+}
+console.log('✅ Products & regional prices seeded')
 
-  // ────── Price History (90 days × all products × 5 regions) ──────
-  let phCount = 0
+// ────── Price History (90 days × all products × 5 regions) ──────
+  console.log('⏳ Generating price history batch...')
+  const historyBatch = []
   for (const product of productRecords) {
     for (const reg of REGIONS) {
       const markup = BRAND_MARKUPS[product.brandName][reg.region] || 1.0
       const currencyRate = CURRENCY_RATES.find(r => r.targetCurrency === reg.currency)
       const finalBasePrice = product.basePriceEUR * markup * (currencyRate?.rate || 1)
 
-      let prevPrice = finalBasePrice * 0.92 // start 8% lower 90 days ago
+      let prevPrice = finalBasePrice * 0.92
       for (let d = 90; d >= 0; d--) {
         const date = new Date(today)
         date.setDate(date.getDate() - d)
-        // Mean reversion + small noise + slight upward trend
         const targetPrice = finalBasePrice * (1 + (90 - d) * 0.0005)
         const drift = (targetPrice - prevPrice) * 0.1
         const noise = (seededRand(d * 13 + product.sku.charCodeAt(0) + reg.region.charCodeAt(0)) - 0.5) * finalBasePrice * 0.012
         const newPrice = Math.max(prevPrice * 0.85, prevPrice + drift + noise)
         const changePct = round2(((newPrice - prevPrice) / prevPrice) * 100)
-        // Flag anomalies (>3% daily change)
-        const anomalyFlag = Math.abs(changePct) > 3
-
-        await prisma.priceHistory.create({
-          data: {
-            productId: product.id, brandId: product.brandId,
-            region: reg.region, currency: reg.currency,
-            price: round2(newPrice), date, changePct, anomalyFlag,
-          },
+        
+        historyBatch.push({
+          productId: product.id, brandId: product.brandId,
+          region: reg.region, currency: reg.currency,
+          price: round2(newPrice), date, changePct, 
+          anomalyFlag: Math.abs(changePct) > 3
         })
         prevPrice = newPrice
-        phCount++
       }
     }
   }
-  console.log(`✅ ${phCount} price history points seeded (90 days × 25 products × 5 regions)`)
+
+  await prisma.priceHistory.createMany({ data: historyBatch, skipDuplicates: true })
+  console.log(`✅ ${historyBatch.length} price history points seeded`)
 
   // ────── Launches ──────
   const now = new Date()
