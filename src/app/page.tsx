@@ -219,9 +219,6 @@ function SidebarContent({
             Tracker
           </span>
         </div>
-        <p className="mt-1.5 text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-subtle)]">
-          Global Intelligence · v3.1
-        </p>
       </div>
 
       <div className="rule mx-6 hidden lg:block" />
@@ -258,16 +255,6 @@ function SidebarContent({
           </div>
         ))}
       </nav>
-
-      {/* Footer */}
-      <div className="border-t border-[var(--color-border)] px-6 py-4">
-        <div className="text-[10px] uppercase tracking-[0.14em] text-[var(--color-ink-faint)]">
-          Build
-        </div>
-        <p className="mt-1 text-[11px] leading-relaxed text-[var(--color-ink-subtle)]">
-          Static snapshot · Vercel-only · Watchlist stored locally
-        </p>
-      </div>
     </div>
   )
 }

@@ -76,7 +76,7 @@ export function LaunchCalendar() {
             return (
               <div
                 key={l.id}
-                className="grid grid-cols-[80px,1fr,120px,80px] gap-4 border-b border-[var(--color-border)] py-4 data-row"
+                className="grid grid-cols-[80px,1fr,120px,80px] gap-4 border-b border-[var(--color-border)] py-2.5 data-row"
               >
                 <div>
                   <div className="text-[10px] uppercase tracking-[0.14em] text-[var(--color-ink-subtle)]">
@@ -88,7 +88,7 @@ export function LaunchCalendar() {
                 </div>
                 <div className="min-w-0">
                   <div className="text-[13px] text-[var(--color-ink)]">{l.product.name}</div>
-                  <div className="mt-1 flex items-center gap-3 text-[10px] uppercase tracking-[0.12em] text-[var(--color-ink-subtle)]">
+                  <div className="mt-0.5 flex items-center gap-3 text-[10px] uppercase tracking-[0.12em] text-[var(--color-ink-subtle)]">
                     <span className="flex items-center gap-1.5">
                       <span
                         className="status-dot"
