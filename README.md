@@ -17,11 +17,20 @@ Pure client-side deterministic snapshot (seeded PRNG). Zero environment variable
 
 ## Screenshots
 
-> Add 3–4 dark-mode shots here once captured (`docs/screenshots/`):
-> - Overview hero (38 % max markup + KPI strip)
-> - Price Disparity Matrix
-> - Arbitrage / Landed-cost Optimizer
-> - Brand Pulse or Launch Calendar
+### Overview — Live Telemetry
+![Overview](docs/screenshots/01-overview.png)
+
+### Price Disparity Matrix
+![Price Matrix](docs/screenshots/02-price-matrix.png)
+
+### Arbitrage Opportunity Finder
+![Arbitrage](docs/screenshots/03-arbitrage.png)
+
+### Competitive Brand Comparison
+![Competitive Matrix](docs/screenshots/04-competitive-matrix.png)
+
+### Sustainability Scores
+![Sustainability](docs/screenshots/05-sustainability.png)
 
 ## Features
 
