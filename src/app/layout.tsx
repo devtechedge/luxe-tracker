@@ -4,9 +4,11 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'Luxe Tracker — Global Launch & Price Disparity',
   description:
-    'High-fashion global launch and price disparity tracker. 5 brands · 25 products · 11k+ price history rows · 15 intelligence modules.',
-  other: {
-    'build-version': 'v3.1-202606232242',
+    'High-fashion global launch and price disparity tracker. 5 brands · 25 products · 11k+ price history rows · 17 intelligence panels.',
+  icons: {
+    icon: [{ url: '/logo.svg', type: 'image/svg+xml' }],
+    shortcut: '/logo.svg',
+    apple: '/logo.svg',
   },
 }
 
