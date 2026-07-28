@@ -18,19 +18,19 @@ Pure client-side deterministic snapshot (seeded PRNG). Zero environment variable
 ## Screenshots
 
 ### Overview — Live Telemetry
-![Overview](docs/screenshots/Screenshot%202026-07-28%20052855.png)
+![Overview](docs/screenshots/01-overview.png)
 
 ### Price Disparity Matrix
-![Price Matrix](docs/screenshots/Screenshot%202026-07-28%20052901.png)
+![Price Matrix](docs/screenshots/02-price-matrix.png)
 
 ### Arbitrage Opportunity Finder
-![Arbitrage](docs/screenshots/Screenshot%202026-07-28%20052910.png)
+![Arbitrage](docs/screenshots/03-arbitrage.png)
 
 ### Competitive Brand Comparison
-![Competitive Matrix](docs/screenshots/Screenshot%202026-07-28%20052928.png)
+![Competitive Matrix](docs/screenshots/04-competitive-matrix.png)
 
 ### Sustainability Scores
-![Sustainability](docs/screenshots/Screenshot%202026-07-28%20052936.png)
+![Sustainability](docs/screenshots/05-sustainability.png)
 
 ## Features
 
