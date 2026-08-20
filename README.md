@@ -68,6 +68,20 @@ bun run dev          # → http://localhost:3000
 
 No environment variables required.
 
+## Tests & CI
+
+```bash
+bun test              # unit: snapshot counts, telemetry, price-history key split, VIP, validation
+bun run typecheck
+bun run test:e2e      # Playwright Chromium — overview, Price Matrix nav, theme toggle
+```
+
+GitHub Actions runs unit + typecheck + e2e on every push to `main`. Dependabot opens weekly PRs for patch/minor npm and Actions updates (majors ignored).
+
+## Security
+
+See [SECURITY.md](./SECURITY.md). Public demo has no backend, no env vars, and no auth boundary. Watchlist / alerts / spend in `localStorage` are allow-listed on read.
+
 ## Architecture
 
 Single Vercel deployment. All analytics are pure functions over a seeded in-memory snapshot (`src/lib/data-snapshot.ts` + `src/lib/analytics.ts`). Watchlist and alerts persist in `localStorage`. Dark/light theme is controlled by a no-flash inline script + CSS variables.

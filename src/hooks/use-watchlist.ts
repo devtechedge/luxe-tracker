@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import type { WatchlistEntry, AlertEntry } from '@/lib/fashion-types'
+import { parseAlerts, parseSpend, parseWatchlist } from '@/lib/validation'
 
 const WATCHLIST_KEY = 'luxe-tracker:watchlist'
 const ALERTS_KEY = 'luxe-tracker:alerts'
@@ -12,6 +13,8 @@ const SPEND_KEY = 'luxe-tracker:annual-spend'
 // ============================================================
 // Mirrors the server-side WatchlistItem model. Single-user
 // (matches Prisma schema: userId String @default("default"))
+// Payloads are allow-listed in src/lib/validation.ts so a
+// poisoned localStorage blob cannot enter React state.
 // ============================================================
 
 export function useWatchlist() {
@@ -21,7 +24,7 @@ export function useWatchlist() {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(WATCHLIST_KEY)
-      if (raw) setItems(JSON.parse(raw))
+      if (raw) setItems(parseWatchlist(raw))
     } catch {}
     setHydrated(true)
   }, [])
@@ -39,7 +42,7 @@ export function useWatchlist() {
         id: `wl_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
         createdAt: new Date().toISOString(),
       },
-    ])
+    ].slice(-50))
   }, [])
 
   const remove = useCallback((id: string) => {
@@ -65,7 +68,7 @@ export function useAlerts() {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(ALERTS_KEY)
-      if (raw) setAlerts(JSON.parse(raw))
+      if (raw) setAlerts(parseAlerts(raw))
     } catch {}
     setHydrated(true)
   }, [])
@@ -112,7 +115,7 @@ export function useAnnualSpend(defaultValue = 8000) {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(SPEND_KEY)
-      if (raw) setValue(parseInt(raw) || defaultValue)
+      if (raw) setValue(parseSpend(raw, defaultValue))
     } catch {}
     setHydrated(true)
   }, [defaultValue])

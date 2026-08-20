@@ -1,6 +1,6 @@
 {
   "name": "luxe-tracker",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "High-fashion global launch & price disparity tracker — 17 intelligence panels, editorial dark/light UI, pure client-side deterministic demo.",
   "scripts": {
@@ -8,7 +8,10 @@
     "build": "next build",
     "start": "next start -p 3000",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "bun test src/lib",
+    "test:e2e": "playwright test",
+    "audit": "bun audit"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -21,6 +24,7 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^22",
     "@types/react": "^19",
