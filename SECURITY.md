@@ -26,7 +26,7 @@
 ## 1. Authentication & session
 
 **Findings**
-- Public site requires no login (expected for a hiring-manager demo).
+- Public site requires no login (expected for a public demo).
 - Watchlist, alerts, annual-spend, and theme persist in `localStorage` keyed under `luxe-tracker:*`.
 - There is no server session, cookie, or token.
 
