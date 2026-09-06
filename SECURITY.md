@@ -1,6 +1,6 @@
 # Security Assessment — Luxe Tracker
 
-**Date:** 2026-08-21  
+**Date:** 2026-09-06  
 **Scope:** Auth, XSS, injection, localStorage hardening, dependency risk, secrets hygiene, build config  
 **Context:** Public deploy is a **pure client-side demo** ([luxe-disparity-tracker.vercel.app](https://luxe-disparity-tracker.vercel.app/)). No API routes, no database, no environment variables.
 
@@ -155,3 +155,11 @@ bun run audit
 ```
 
 To report a vulnerability, open a [GitHub security advisory](https://github.com/devtechedge/luxe-tracker/security/advisories) or an issue. There are no production secrets to rotate.
+
+## Repository visibility
+
+This repository is currently **public** for portfolio review. When the open-source
+build story is no longer needed, **the GitHub repo will go private**. Making the
+repo private reduces source disclosure; it does **not** replace strong production
+secrets, auth allow-lists, webhook signatures, or Vercel/Actions environment
+hygiene. Rotate any credential that was pasted into chat, tickets, or screenshots.
