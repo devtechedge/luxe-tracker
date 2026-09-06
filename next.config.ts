@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: false,
   typescript: {
     ignoreBuildErrors: false,
-  },,
+  },
 
   async headers() {
     return [
