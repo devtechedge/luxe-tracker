@@ -36,7 +36,7 @@
 }
 
 /* ============================================================
-   LIGHT MODE OVERRIDES — applied via [data-theme="light"]
+   LIGHT MODE OVERRIDES - applied via [data-theme="light"]
    ============================================================ */
 [data-theme="light"] {
   --color-bg: #FAFAF7;
@@ -80,7 +80,7 @@
     transition: background-color 200ms ease, color 200ms ease;
   }
 
-  /* All numbers get tabular alignment — critical for data tables */
+  /* All numbers get tabular alignment - critical for data tables */
   .num,
   table td,
   table th,
@@ -141,7 +141,7 @@
    TYPOGRAPHIC UTILITIES
    ============================================================ */
 
-/* Display serif — used for hero numbers, panel titles */
+/* Display serif - used for hero numbers, panel titles */
 .font-display {
   font-family: var(--font-display);
   font-feature-settings: "ss01";
@@ -182,7 +182,7 @@
   opacity: 0.8;
 }
 
-/* Divider rules — very thin, used in editorial layouts */
+/* Divider rules - very thin, used in editorial layouts */
 .rule {
   height: 1px;
   background: var(--color-border);
@@ -192,7 +192,7 @@
   background: var(--color-border-strong);
 }
 
-/* Fade-in on mount — used for chart sections */
+/* Fade-in on mount - used for chart sections */
 @keyframes editorial-fade-in {
   from {
     opacity: 0;
@@ -213,7 +213,7 @@
 .fade-in-delay-3 { animation-delay: 180ms; }
 .fade-in-delay-4 { animation-delay: 240ms; }
 
-/* Status dot — small circular indicator */
+/* Status dot - small circular indicator */
 .status-dot {
   display: inline-block;
   width: 6px;
@@ -221,7 +221,7 @@
   border-radius: 50%;
 }
 
-/* Tabular column rules — for dense data tables */
+/* Tabular column rules - for dense data tables */
 .tabular-rule td {
   border-bottom: 1px solid var(--color-border);
 }

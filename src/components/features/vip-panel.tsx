@@ -23,7 +23,7 @@ export function VipPanel() {
       category="Luxury"
       title="VIP Client Tier Simulator"
       subtitle="What tier would your spending qualify for at each maison?"
-      caption="Drag the spend slider. Each maison calibrates tiers differently — discover which brand rewards your loyalty."
+      caption="Drag the spend slider. Each maison calibrates tiers differently - discover which brand rewards your loyalty."
     >
       <section className="mb-8">
         <div className="rule" />

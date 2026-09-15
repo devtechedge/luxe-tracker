@@ -33,7 +33,7 @@ export function HypePredictor() {
       subtitle={`Predicted demand for ${data.totalProducts} products · average hype ${data.avgHypeScore}`}
       caption="Composite score blending brand tier, category demand, season timing, exclusivity, and time-decay."
     >
-      {/* === HEADLINE — two-column grid with explicit min-height === */}
+      {/* === HEADLINE - two-column grid with explicit min-height === */}
       {featured && (
         <section className="mb-12">
           <div className="rule" />
@@ -69,7 +69,7 @@ export function HypePredictor() {
                 </div>
               </div>
 
-              {/* Breakdown bars — explicit 5-col grid with fixed height */}
+              {/* Breakdown bars - explicit 5-col grid with fixed height */}
               <div className="mt-8 grid grid-cols-5 gap-px border border-[var(--color-border)] bg-[var(--color-border)]">
                 {featured.hypeBreakdown &&
                   Object.entries(featured.hypeBreakdown).map(([key, val]) => (
@@ -174,7 +174,7 @@ export function HypePredictor() {
         </span>
       </div>
 
-      {/* === HYPED GRID — explicit fixed-height cards, no overlap possible === */}
+      {/* === HYPED GRID - explicit fixed-height cards, no overlap possible === */}
       <section>
         <div className="grid grid-cols-1 gap-px border border-[var(--color-border)] bg-[var(--color-border)] md:grid-cols-2 xl:grid-cols-3">
           {filtered.slice(0, 12).map((p) => (

@@ -1,5 +1,5 @@
 // ============================================================
-// PANEL SHELL — reusable editorial wrapper for all 19 panels
+// PANEL SHELL - reusable editorial wrapper for all 19 panels
 // ============================================================
 // Enforces visual uniformity: consistent header, spacing,
 // divider placement, and responsive padding across every panel.
@@ -46,7 +46,7 @@ export function PanelShell({
 }
 
 // ============================================================
-// SECTION — sub-section divider with optional label
+// SECTION - sub-section divider with optional label
 // Standardised: rule + py-5 padding for all sections
 // ============================================================
 interface SectionProps {
@@ -84,7 +84,7 @@ export function Section({ label, title, caption, children, className = '' }: Sec
 }
 
 // ============================================================
-// DATA TABLE — consistent dense table styling
+// DATA TABLE - consistent dense table styling
 // ============================================================
 interface DataTableProps {
   columns: { key: string; label: string; align?: 'left' | 'right'; className?: string }[]
@@ -138,7 +138,7 @@ export function DataTable({
 }
 
 // ============================================================
-// DATA ROW — dense vertical list item
+// DATA ROW - dense vertical list item
 // ============================================================
 interface DataRowProps {
   primary: ReactNode
@@ -166,7 +166,7 @@ export function DataRow({ primary, secondary, trailing, className = '' }: DataRo
 }
 
 // ============================================================
-// KPI STRIP — inline numerical strip used in panels
+// KPI STRIP - inline numerical strip used in panels
 // Uniform: grid-cols-2 on mobile, grid-cols-4 on md+
 // ============================================================
 interface KpiStripProps {
@@ -194,7 +194,7 @@ export function KpiStrip({ items, cols = 4 }: KpiStripProps) {
 }
 
 // ============================================================
-// CHART TOOLTIP — editorial, mono numbers
+// CHART TOOLTIP - editorial, mono numbers
 // ============================================================
 interface TooltipPayload {
   active?: boolean
@@ -236,7 +236,7 @@ export function ChartTooltip({
 }
 
 // ============================================================
-// EMPTY STATE — clean editorial empty-state
+// EMPTY STATE - clean editorial empty-state
 // ============================================================
 export function EmptyState({ title, hint }: { title: string; hint?: string }) {
   return (
@@ -252,7 +252,7 @@ export function EmptyState({ title, hint }: { title: string; hint?: string }) {
 }
 
 // ============================================================
-// CHART PANEL — consistent wrapper for chart sections
+// CHART PANEL - consistent wrapper for chart sections
 // ============================================================
 interface ChartPanelProps {
   label: string
@@ -284,7 +284,7 @@ export function ChartPanel({ label, title, caption, children, height = 260 }: Ch
 }
 
 // ============================================================
-// EDITORIAL TOOLTIP — restrained, no rounded corners, mono numbers
+// EDITORIAL TOOLTIP - restrained, no rounded corners, mono numbers
 // ============================================================
 export function EditorialTooltip({ active, payload, label, suffix = '%' }: any) {
   if (!active || !payload?.length) return null

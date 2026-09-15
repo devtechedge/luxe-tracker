@@ -17,7 +17,7 @@ Pure client-side deterministic snapshot (seeded PRNG). Zero environment variable
 
 ## Screenshots
 
-### Overview — Live Telemetry
+### Overview - Live Telemetry
 ![Overview](docs/screenshots/01-overview.png)
 
 ### Price Disparity Matrix
@@ -34,15 +34,15 @@ Pure client-side deterministic snapshot (seeded PRNG). Zero environment variable
 
 ## Features
 
-- **Live Telemetry Overview** — editorial hero number, 8-column KPI strip, FX rates, region & brand markup charts
-- **Price Disparity Matrix** — sortable 5-region matrix with EUR baseline, duties, taxes and landed cost
-- **Launch Calendar** — 90-day rolling grid of regional drops with status badges
-- **Arbitrage Opportunity Detector** — net profit after duties, taxes and shipping per region pair
-- **Landed-Cost Optimizer** — cheapest buying region recommendation per SKU
-- **Price History & Anomaly Flags** — 90-day time series with >3 % daily move detection
-- **FX Volatility Hedge Calculator** — 90-day FX history + what-if revaluation
-- **Brand Pulse Radar** — 5-dimensional prestige / hype / scarcity / FX risk / resale score
-- **Stock-Out Risk Index** — sell-out probability from inventory × hype × days-to-launch
+- **Live Telemetry Overview** - editorial hero number, 8-column KPI strip, FX rates, region & brand markup charts
+- **Price Disparity Matrix** - sortable 5-region matrix with EUR baseline, duties, taxes and landed cost
+- **Launch Calendar** - 90-day rolling grid of regional drops with status badges
+- **Arbitrage Opportunity Detector** - net profit after duties, taxes and shipping per region pair
+- **Landed-Cost Optimizer** - cheapest buying region recommendation per SKU
+- **Price History & Anomaly Flags** - 90-day time series with >3 % daily move detection
+- **FX Volatility Hedge Calculator** - 90-day FX history + what-if revaluation
+- **Brand Pulse Radar** - 5-dimensional prestige / hype / scarcity / FX risk / resale score
+- **Stock-Out Risk Index** - sell-out probability from inventory × hype × days-to-launch
 - **Competitive Matrix, Runway Tracker, VIP Tier Simulator, Sustainability, Trend Forecast, Drop Queue, Watchlist & Alerts**
 
 ## Tech Stack
@@ -73,7 +73,7 @@ No environment variables required.
 ```bash
 bun test              # unit: snapshot counts, telemetry, price-history key split, VIP, validation
 bun run typecheck
-bun run test:e2e      # Playwright Chromium — overview, Price Matrix nav, theme toggle
+bun run test:e2e      # Playwright Chromium - overview, Price Matrix nav, theme toggle
 ```
 
 GitHub Actions runs unit + typecheck + e2e on every push to `main`. Dependabot opens weekly PRs for patch/minor npm and Actions updates (majors ignored).

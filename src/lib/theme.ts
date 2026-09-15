@@ -1,5 +1,5 @@
 // ============================================================
-// THEME — dark/light mode with localStorage persistence
+// THEME - dark/light mode with localStorage persistence
 // ============================================================
 "use client"
 

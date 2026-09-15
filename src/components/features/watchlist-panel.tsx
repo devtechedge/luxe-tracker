@@ -22,7 +22,7 @@ export function WatchlistPanel() {
       {items.length === 0 ? (
         <EmptyState
           title="Your watchlist is empty"
-          hint="Add from any panel — your selection persists across reloads"
+          hint="Add from any panel - your selection persists across reloads"
         />
       ) : (
         <section>

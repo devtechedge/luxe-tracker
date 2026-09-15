@@ -2,7 +2,7 @@
   "name": "luxe-tracker",
   "version": "0.2.0",
   "private": true,
-  "description": "High-fashion global launch & price disparity tracker — 17 intelligence panels, editorial dark/light UI, pure client-side deterministic demo.",
+  "description": "High-fashion global launch & price disparity tracker - 17 intelligence panels, editorial dark/light UI, pure client-side deterministic demo.",
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",

@@ -1,5 +1,5 @@
 // ============================================================
-// DATA SNAPSHOT — generates the full dataset in-memory
+// DATA SNAPSHOT - generates the full dataset in-memory
 // ============================================================
 // This replaces prisma/seed.ts + PostgreSQL. The shape is
 // 1:1 with the Prisma models so swapping back to a DB later
@@ -7,7 +7,7 @@
 //
 // All data is generated deterministically via a seeded PRNG
 // (mulberry32) so the dashboard renders identically on every
-// reload — important for screenshots, tests, and demo videos.
+// reload - important for screenshots, tests, and demo videos.
 //
 // To scale beyond the seed baseline: just bump BRAND_COUNT and
 // PRODUCT_PER_BRAND below. The same code path handles any size.
@@ -31,7 +31,7 @@ import type {
 } from './fashion-types'
 
 // ------------------------------------------------------------
-// Deterministic PRNG (mulberry32) — same seed → same data
+// Deterministic PRNG (mulberry32) - same seed → same data
 // ------------------------------------------------------------
 function mulberry32(seed: number) {
   return function () {
@@ -402,7 +402,7 @@ function generateSustainability() {
 // ------------------------------------------------------------
 function generateVIPTiers() {
   // Property names match the VIPTierData interface used by analytics.ts
-  // and vip-panel.tsx — was a bug where the original used shorthand
+  // and vip-panel.tsx - was a bug where the original used shorthand
   // names (name/minSpend/discount) that didn't match the schema.
   const tierDefs: VIPTierData[] = [
     { tierName: 'Silver',   minAnnualSpendEUR: 5000,   discountPct: 5,  earlyAccessDays: 0,  allocationPriority: 2, privateViewing: false, personalShopper: false, achievable: false },

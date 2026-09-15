@@ -1,9 +1,9 @@
 // ============================================================
-// ANALYTICS — all calculation logic (ported from /api/analytics)
+// ANALYTICS - all calculation logic (ported from /api/analytics)
 // ============================================================
 // These functions replace the server-side endpoints in the
 // original Next.js API route. They run synchronously against
-// the in-memory snapshot — instant, no network, no DB.
+// the in-memory snapshot - instant, no network, no DB.
 //
 // All function signatures match the original endpoints 1:1
 // so swapping back to a real backend later is mechanical.

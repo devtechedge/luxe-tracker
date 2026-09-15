@@ -109,7 +109,7 @@ export function PriceHistory() {
               </div>
             </div>
 
-            {/* Headline metric — border-l only on lg+ */}
+            {/* Headline metric - border-l only on lg+ */}
             <div className="flex flex-col justify-center lg:border-l lg:border-[var(--color-border)] lg:pl-8">
               <div className="label">90-day change</div>
               <div

@@ -1,4 +1,4 @@
-# Security Assessment — Luxe Tracker
+# Security Assessment - Luxe Tracker
 
 **Date:** 2026-09-06  
 **Scope:** Auth, XSS, injection, localStorage hardening, dependency risk, secrets hygiene, build config  
@@ -15,11 +15,11 @@
 | XSS | **Low** | One first-party `dangerouslySetInnerHTML` (theme bootstrap). React text escaping elsewhere |
 | Injection (SQL) | **N/A** | No database. Prisma/Supabase were removed |
 | localStorage | **Low (hardened)** | Watchlist / alerts / spend parsed through allow-lists |
-| Dependency CVEs | **Low** | Lean graph — Next, React, Recharts, Lucide, Tailwind utilities only |
+| Dependency CVEs | **Low** | Lean graph - Next, React, Recharts, Lucide, Tailwind utilities only |
 | Secrets in repo | **None** | Zero env vars; `.env*` gitignored |
-| Build config | **Hardened** | `ignoreBuildErrors` is **false** — type errors fail CI/build |
+| Build config | **Hardened** | `ignoreBuildErrors` is **false** - type errors fail CI/build |
 
-**Overall (public Vercel demo):** Low residual risk — browser-only snapshot, no backend secrets, no auth boundary to break.
+**Overall (public Vercel demo):** Low residual risk - browser-only snapshot, no backend secrets, no auth boundary to break.
 
 ---
 
@@ -89,7 +89,7 @@ Runtime:
 
 No NextAuth, Prisma, Supabase client, Markdown, or unused Radix/shadcn widgets. Nothing to drop in this pass.
 
-`bun audit` (2026-08-21) reports residual advisories in **Next 15.5.19** (SSRF / DoS / cache-confusion on Server Actions, Image Optimization, rewrites — this app has **no Server Actions, no rewrites, no image optimizer usage**) and transitive **sharp** / **postcss**. Dev-only: eslint → brace-expansion / js-yaml. Majors are ignored by Dependabot; patch/minor upgrades (e.g. Next 15.5.21) will arrive as grouped PRs.
+`bun audit` (2026-08-21) reports residual advisories in **Next 15.5.19** (SSRF / DoS / cache-confusion on Server Actions, Image Optimization, rewrites - this app has **no Server Actions, no rewrites, no image optimizer usage**) and transitive **sharp** / **postcss**. Dev-only: eslint → brace-expansion / js-yaml. Majors are ignored by Dependabot; patch/minor upgrades (e.g. Next 15.5.21) will arrive as grouped PRs.
 
 ### How to re-audit
 
@@ -116,7 +116,7 @@ bun audit
 | Dashboard `/` | None | Client-side snapshot + 17 panels |
 | API routes | **None** | No `src/app/api` |
 
-`next.config.ts`: `typescript.ignoreBuildErrors` is **false**. `reactStrictMode` is off (intentional — snapshot is built once at module load).
+`next.config.ts`: `typescript.ignoreBuildErrors` is **false**. `reactStrictMode` is off (intentional - snapshot is built once at module load).
 
 ---
 

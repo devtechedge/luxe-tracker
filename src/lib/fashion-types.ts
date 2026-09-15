@@ -1,5 +1,5 @@
 // ============================================================
-// SHARED TYPES — luxury fashion price/disparity tracker
+// SHARED TYPES - luxury fashion price/disparity tracker
 // (1:1 with the original repo, minus the watchlist mutation types)
 // ============================================================
 

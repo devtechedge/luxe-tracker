@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Luxe Tracker — Global Launch & Price Disparity',
+  title: 'Luxe Tracker - Global Launch & Price Disparity',
   description:
     'High-fashion global launch and price disparity tracker. 5 brands · 25 products · 11k+ price history rows · 17 intelligence panels.',
   icons: {

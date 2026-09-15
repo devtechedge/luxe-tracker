@@ -41,10 +41,10 @@ export function TelemetryOverview() {
       subtitle="Updated every second"
     >
       {/* ============================================================ */}
-      {/* HERO — editorial metric strip                                  */}
+      {/* HERO - editorial metric strip                                  */}
       {/* ============================================================ */}
       <section className="pb-5">
-        {/* Massive headline number — the hero metric */}
+        {/* Massive headline number - the hero metric */}
         <div className="mb-8 flex items-baseline gap-4">
           <span className="hero-num text-[48px] text-[var(--color-ink)] md:text-[64px] lg:text-[80px]">
             {o.maxDisparityOverall.toFixed(1)}
@@ -59,7 +59,7 @@ export function TelemetryOverview() {
           </div>
         </div>
 
-        {/* Metric grid — 8 columns of typographic numbers */}
+        {/* Metric grid - 8 columns of typographic numbers */}
         <div className="rule" />
         <div className="grid grid-cols-2 gap-x-6 gap-y-6 py-6 md:grid-cols-4 lg:grid-cols-8">
           {metrics.map((m) => (
@@ -85,7 +85,7 @@ export function TelemetryOverview() {
           ))}
         </div>
 
-        {/* Currency rates — inline data strip */}
+        {/* Currency rates - inline data strip */}
         <div className="rule" />
         <div className="flex flex-wrap items-center gap-x-8 gap-y-2 py-5">
           <span className="label">FX Rates</span>
@@ -103,7 +103,7 @@ export function TelemetryOverview() {
       </section>
 
       {/* ============================================================ */}
-      {/* DATA SECTION — typography-first, minimal chrome                */}
+      {/* DATA SECTION - typography-first, minimal chrome                */}
       {/* ============================================================ */}
       <div className="rule" />
       <section className="grid grid-cols-1 gap-8 py-5 lg:grid-cols-2">

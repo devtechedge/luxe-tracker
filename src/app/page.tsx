@@ -94,7 +94,7 @@ export default function Dashboard() {
     <div className="min-h-screen">
       <div className="mx-auto flex max-w-[1500px] gap-0">
         {/* ============================================================ */}
-        {/* SIDEBAR — desktop (sticky) + mobile (slide-over drawer)       */}
+        {/* SIDEBAR - desktop (sticky) + mobile (slide-over drawer)       */}
         {/* ============================================================ */}
         <aside className="sticky top-0 hidden h-screen w-[260px] shrink-0 border-r border-[var(--color-border)] bg-[var(--color-bg)] lg:block">
           <SidebarContent grouped={grouped} activePanel={activePanel} onNav={handleNav} />
@@ -162,7 +162,7 @@ export default function Dashboard() {
             </div>
           </header>
 
-          {/* PANEL CONTENT — responsive horizontal padding */}
+          {/* PANEL CONTENT - responsive horizontal padding */}
           <div key={activePanel} className="fade-in px-4 py-6 md:px-8 md:py-8">
             {activePanel === 'overview' && <TelemetryOverview />}
             {activePanel === 'price-matrix' && <PriceMatrix />}
@@ -196,7 +196,7 @@ export default function Dashboard() {
 }
 
 // ============================================================
-// SIDEBAR CONTENT — shared between desktop and mobile drawer
+// SIDEBAR CONTENT - shared between desktop and mobile drawer
 // ============================================================
 function SidebarContent({
   grouped,
@@ -209,7 +209,7 @@ function SidebarContent({
 }) {
   return (
     <div className="flex h-full flex-col">
-      {/* Brand mark — desktop only (mobile has its own) */}
+      {/* Brand mark - desktop only (mobile has its own) */}
       <div className="px-6 pt-7 pb-6 hidden lg:block">
         <div className="flex items-baseline gap-2">
           <span className="font-display text-xl font-medium tracking-tight text-[var(--color-ink)]">
@@ -260,7 +260,7 @@ function SidebarContent({
 }
 
 // ============================================================
-// THEME TOGGLE — clean editorial pill
+// THEME TOGGLE - clean editorial pill
 // ============================================================
 function ThemeToggle({
   theme,

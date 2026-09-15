@@ -9,7 +9,7 @@ const ALERTS_KEY = 'luxe-tracker:alerts'
 const SPEND_KEY = 'luxe-tracker:annual-spend'
 
 // ============================================================
-// useWatchlist — localStorage-backed watchlist
+// useWatchlist - localStorage-backed watchlist
 // ============================================================
 // Mirrors the server-side WatchlistItem model. Single-user
 // (matches Prisma schema: userId String @default("default"))
@@ -58,7 +58,7 @@ export function useWatchlist() {
 }
 
 // ============================================================
-// useAlerts — localStorage-backed alerts feed
+// useAlerts - localStorage-backed alerts feed
 // ============================================================
 
 export function useAlerts() {
@@ -104,7 +104,7 @@ export function useAlerts() {
 }
 
 // ============================================================
-// useAnnualSpend — localStorage-backed annual spend input
+// useAnnualSpend - localStorage-backed annual spend input
 // (used by VIP Tier Simulator)
 // ============================================================
 

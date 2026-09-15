@@ -32,7 +32,7 @@ describe('getSnapshot counts', () => {
     assert.equal(snap.currencyData.length, 4)
   })
 
-  it('is a singleton — the same object is reused', () => {
+  it('is a singleton - the same object is reused', () => {
     assert.equal(getSnapshot(), snap)
   })
 })

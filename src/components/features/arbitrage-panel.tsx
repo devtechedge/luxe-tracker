@@ -25,12 +25,12 @@ export function ArbitragePanel() {
       subtitle={`${data.totalOpportunities} profitable routes · ${data.avgSavingsPct.toFixed(1)}% average savings`}
       caption="Buy from a low-priced region and ship to a high-priced region. Savings calculated net of shipping and import duty."
     >
-      {/* === HEADLINE — explicit 2-column grid with explicit constraints === */}
+      {/* === HEADLINE - explicit 2-column grid with explicit constraints === */}
       {headline && (
         <section className="mb-12">
           <div className="rule" />
           <div className="grid grid-cols-1 gap-10 py-8 md:grid-cols-2 md:gap-12">
-            {/* Left: opportunity details — explicit fixed column */}
+            {/* Left: opportunity details - explicit fixed column */}
             <div className="min-w-0">
               <div className="label mb-3">Top Opportunity</div>
               <h3 className="font-display text-[24px] font-medium leading-[1.15] tracking-tight text-[var(--color-ink)]">
@@ -56,7 +56,7 @@ export function ArbitragePanel() {
               </div>
             </div>
 
-            {/* Right: savings — explicit fixed column */}
+            {/* Right: savings - explicit fixed column */}
             <div className="min-w-0 border-t border-[var(--color-border)] pt-6 lg:border-l lg:border-t-0 lg:border-[var(--color-border)] lg:pl-8 lg:pt-0">
               <div className="label mb-3">Net Savings</div>
               <div className="font-display text-[64px] font-medium leading-none tracking-tight text-[var(--color-accent)]">

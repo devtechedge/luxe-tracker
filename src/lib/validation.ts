@@ -1,5 +1,5 @@
 // ============================================================
-// VALIDATION — allow-lists for untrusted localStorage payloads
+// VALIDATION - allow-lists for untrusted localStorage payloads
 // ============================================================
 // Watchlist, alerts, spend, and theme are browser-local only.
 // A compromised extension or pasted DevTools payload should

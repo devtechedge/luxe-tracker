@@ -36,7 +36,7 @@ export function PriceMatrix() {
       title="Price Disparity Matrix"
       subtitle={`${products.length} products × 5 regions · baseline EU retail`}
     >
-      {/* Filter row — responsive: stack on mobile, horizontal on desktop */}
+      {/* Filter row - responsive: stack on mobile, horizontal on desktop */}
       <div className="rule" />
       <div className="flex flex-col gap-3 py-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative">
@@ -63,7 +63,7 @@ export function PriceMatrix() {
         </div>
       </div>
 
-      {/* TABLE — dense, editorial with horizontal scroll on mobile */}
+      {/* TABLE - dense, editorial with horizontal scroll on mobile */}
       <div className="overflow-x-auto">
         <div className="max-h-[640px] overflow-auto">
           <table className="w-full min-w-[700px] text-[12px] tabular-nums">

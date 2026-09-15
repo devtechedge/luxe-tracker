@@ -41,7 +41,7 @@ export function OptimizerPanel() {
             >
               {products.map((p) => (
                 <option key={p.id} value={p.id}>
-                  {p.brand.name} — {p.name}
+                  {p.brand.name} - {p.name}
                 </option>
               ))}
             </select>
