@@ -1,10 +1,26 @@
 import type { Metadata } from 'next'
 import './globals.css'
 
+const PAGE_TITLE = 'Luxe Tracker - Global Launch & Price Disparity';
+const PAGE_DESCRIPTION =
+  'High-fashion global launch and price disparity tracker. 5 brands · 25 products · 11k+ price history rows · 17 intelligence panels.';
+const SITE_URL = 'https://luxe-disparity-tracker.vercel.app';
+
 export const metadata: Metadata = {
-  title: 'Luxe Tracker - Global Launch & Price Disparity',
-  description:
-    'High-fashion global launch and price disparity tracker. 5 brands · 25 products · 11k+ price history rows · 17 intelligence panels.',
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  // Shared links (LinkedIn, Slack, email) render a bare URL without these.
+  openGraph: {
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    url: SITE_URL,
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+  },
   icons: {
     icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
     shortcut: '/favicon.svg',
