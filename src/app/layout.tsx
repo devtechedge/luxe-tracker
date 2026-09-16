@@ -15,11 +15,13 @@ export const metadata: Metadata = {
     description: PAGE_DESCRIPTION,
     url: SITE_URL,
     type: 'website',
+    images: [{ url: 'https://luxe-disparity-tracker.vercel.app/og.png', width: 1200, height: 630, alt: 'Luxe Tracker - Global Launch & Price Disparity' }],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
+    images: ['https://luxe-disparity-tracker.vercel.app/og.png'],
   },
   icons: {
     icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
