@@ -61,7 +61,7 @@ export function TelemetryOverview() {
 
         {/* Metric grid - 8 columns of typographic numbers */}
         <div className="rule" />
-        <div className="grid grid-cols-2 gap-x-6 gap-y-6 py-6 md:grid-cols-4 lg:grid-cols-8">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-6 py-6 md:grid-cols-4 xl:grid-cols-8">
           {metrics.map((m) => (
             <div key={m.label} className="min-w-0">
               <div className="label mb-1.5">{m.label}</div>
@@ -106,7 +106,7 @@ export function TelemetryOverview() {
       {/* DATA SECTION - typography-first, minimal chrome                */}
       {/* ============================================================ */}
       <div className="rule" />
-      <section className="grid grid-cols-1 gap-8 py-5 lg:grid-cols-2">
+      <section className="grid grid-cols-1 gap-8 py-5 xl:grid-cols-2">
         <ChartPanel
           label="By Region"
           title="Markup vs EU baseline, by region"
